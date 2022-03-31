@@ -26,7 +26,7 @@ repositories {
 
 azurefunctions {
     resourceGroup = 'lucene-kuromoji-sample'
-    appName = 'lucene-kuromoji-samplee'
+    appName = 'lucene-kuromoji-sample'
     pricingTier = 'Consumption'
     region = 'westus'
     runtime {
