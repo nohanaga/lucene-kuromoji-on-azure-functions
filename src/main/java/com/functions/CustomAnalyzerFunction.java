@@ -137,7 +137,7 @@ public class CustomAnalyzerFunction {
 		}
 	}
 
-	public static JSONObject makeRes(String recordId, String text){
+	public static JSONObject makeRes(String recordId, String text) throws JSONException {
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("recordId", recordId);
 		jsonObj.put("words", text);
