@@ -25,8 +25,8 @@ repositories {
 }
 
 azurefunctions {
-    resourceGroup = 'java-functions-group'
-    appName = 'azure-functions-sample-hana1'
+    resourceGroup = 'lucene-kuromoji-sample'
+    appName = 'lucene-kuromoji-samplee'
     pricingTier = 'Consumption'
     region = 'westus'
     runtime {
