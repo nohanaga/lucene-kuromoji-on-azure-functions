@@ -52,7 +52,6 @@ public class CustomAnalyzerFunction {
 	}
 
 	public static String analyzeQuery(String query) {
-		// String query = "えーと、私はﾏｲｸﾛｿﾌﾄのＡｚｕｒｅコンテナーを使おうと思っていた。";
 		Analyzer custom = new CustomJapaneseAnalyzer(readDict(), Mode.SEARCH,
 				CustomJapaneseAnalyzer.getDefaultStopSet(), CustomJapaneseAnalyzer.getDefaultStopTags());
 
@@ -105,6 +104,7 @@ public class CustomAnalyzerFunction {
 
 		// Parse query parameter
 		final String body = request.getBody().orElse(null);
+		//context.getLogger().info(body);
 
 		if (body == null) {
 			return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
@@ -127,10 +127,12 @@ public class CustomAnalyzerFunction {
 
 				return request.createResponseBuilder(HttpStatus.OK)
 				.header("Content-Type", "application/json")
+				.header("Access-Control-Allow-Origin", "*")
 				.body(returnJsonObj.toString())
 				.build();
 
 			} catch (JSONException e) {
+				context.getLogger().info(e.getMessage());
 				return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
 						.body(e.getMessage()).build();
 			}
@@ -139,8 +141,14 @@ public class CustomAnalyzerFunction {
 
 	public static JSONObject makeRes(String recordId, String text) throws JSONException {
 		JSONObject jsonObj = new JSONObject();
+		JSONObject data = new JSONObject();
+		JSONObject error = new JSONObject();
+
 		jsonObj.put("recordId", recordId);
-		jsonObj.put("words", text);
+		data.put("words", text);
+		data.put("error", error);
+		jsonObj.put("data",data);
+
 		return jsonObj;
 	}
 
