@@ -98,8 +98,8 @@ public class CustomAnalyzerFunction {
 	 */
 	@FunctionName("Analyze")
 	public HttpResponseMessage run(
-			@HttpTrigger(name = "req", methods = { HttpMethod.GET,
-					HttpMethod.POST }, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
+			@HttpTrigger(name = "req", methods = { HttpMethod.POST },
+			 authLevel = AuthorizationLevel.FUNCTION) HttpRequestMessage<Optional<String>> request,
 			final ExecutionContext context) {
 		context.getLogger().info("Java HTTP trigger processed a request.");
 
@@ -110,24 +110,38 @@ public class CustomAnalyzerFunction {
 			return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
 					.body("Please pass a name on the query string or in the request body").build();
 		} else {
-			StringBuilder buf = new StringBuilder();
-
+			
 			try {
 				JSONObject obj = new JSONObject(body);
 				JSONArray arrValues = obj.getJSONArray("values");
+				JSONArray arrOutputValues = new JSONArray();
+
 				for (int i = 0; i < arrValues.length(); i++) {
+					String recordId = arrValues.getJSONObject(i).getString("recordId");
 					String text = arrValues.getJSONObject(i).getJSONObject("data").getString("text");
-					buf.append(analyzeQuery(text));
+					arrOutputValues.put(makeRes(recordId, analyzeQuery(text)));
 				}
+
+				JSONObject returnJsonObj = new JSONObject();
+				returnJsonObj.put("values", arrOutputValues);
+
+				return request.createResponseBuilder(HttpStatus.OK)
+				.header("Content-Type", "application/json")
+				.body(returnJsonObj.toString())
+				.build();
+
 			} catch (JSONException e) {
 				return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
 						.body(e.getMessage()).build();
 			}
-			
-			String ret = buf.toString();
-			return request.createResponseBuilder(HttpStatus.OK).body(ret).build();
 		}
+	}
 
+	public static JSONObject makeRes(String recordId, String text){
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("recordId", recordId);
+		jsonObj.put("words", text);
+		return jsonObj;
 	}
 
 }
