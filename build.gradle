@@ -1,0 +1,40 @@
+plugins {
+  id "com.microsoft.azure.azurefunctions" version "1.8.0"
+}
+apply plugin: 'java'
+apply plugin: "com.microsoft.azure.azurefunctions"
+
+group 'com.functions'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    implementation 'com.microsoft.azure.functions:azure-functions-java-library:1.4.2'
+    implementation 'org.json:json:20190722'
+    implementation fileTree(dir: 'lib', include: ['*.jar'])
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
+    testImplementation 'org.mockito:mockito-core:3.3.3'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+azurefunctions {
+    resourceGroup = 'java-functions-group'
+    appName = 'azure-functions-sample-hana1'
+    pricingTier = 'Consumption'
+    region = 'westus'
+    runtime {
+      os = 'Windows'
+      javaVersion = 'Java 8'
+    }
+    auth {
+      type = 'azure_cli'
+    }
+    localDebug = "transport=dt_socket,server=y,suspend=n,address=5005"
+}
