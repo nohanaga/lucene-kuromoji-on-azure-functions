@@ -70,7 +70,7 @@ public class CustomAnalyzerFunction {
 
 			while (tokenStream.incrementToken()) {
 				output.append(term.toString() + " ");
-				/*
+				/* 参考 https://www.mlab.im.dendai.ac.jp/~yamada/ir/MorphologicalAnalyzer/Lucene_Kuromoji.html
 				 * System.out.println(term.toString() + "\t" // 表層形
 				 * + offset.startOffset() + "-" + offset.endOffset() + "," // 文字列中の位置
 				 * + partOfSpeech.getPartOfSpeech() + "," // 品詞-品詞細分類1-品詞細分類2
